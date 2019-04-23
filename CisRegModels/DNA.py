@@ -1,8 +1,8 @@
 
 
-from string import maketrans
+#from string import maketrans
 #import string
-rcTab = maketrans("ATGCatgc","TACGtacg");
+rcTab = str.maketrans("ATGCatgc","TACGtacg");
 def revcomp(seq):
 	global rcTab
 	return seq.translate(rcTab)[::-1];

@@ -1,10 +1,10 @@
-import MYUTILS
-import PWM;
-import TFHELP;
+from . import MYUTILS;
+from . import PWM;
+from . import TFHELP;
 import tensorflow as tf
-import numpy as np;
+import numpy as np
 from datetime import datetime
-import os;
+import os
 import sys
 
 BASES = ['A','C','G','T']

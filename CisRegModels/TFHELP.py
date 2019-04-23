@@ -1,5 +1,5 @@
 from threading import Thread;
-import MYUTILS
+from . import MYUTILS
 import numpy as np;
 import tensorflow as tf;
 import sys
