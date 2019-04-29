@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+## The purpose of this script is to ..
+## Code annotated by Guoyao
 import warnings
 import sys
 import argparse
