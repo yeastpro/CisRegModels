@@ -6,8 +6,8 @@ import numpy as np
 import subprocess
 import sys
 import argparse
-## Building the options for the arguments to be passed. If contains 'required=True' the argument and its flag (i.e. '-i') must be passed.
-## Can execute 'python mergeSeqsByBowtie.py --help' from the command line to see the options.
+## Building the options for the arguments to be passed. If contains 'required=True' the argument and its flag (i.e. '-i')
+## must be passed. Can execute 'python mergeSeqsByBowtie.py --help' from the command line to see the options.
 ## Supporting information at https://docs.python.org/3/library/argparse.html
 parser = argparse.ArgumentParser(description='Provided a file of sequences and priorities (sorted), uses Bowtie to merge similar sequences.')
 parser.add_argument('-i',dest='inFP',	metavar='<inFile>',help='Input file of sequences and priorities, tab delimited 2 columns', required=True);
@@ -85,7 +85,7 @@ def makeBowtieDB():
 		sys.stderr.write(curStdout);
 		sys.stderr.write(stderrData);
 		sys.stderr.write("done!\n");
-
+	## return None
 
 if args.skipDB == 0 and args.skipAlignment == 0:
 	if verbose>0:
@@ -94,7 +94,7 @@ if args.skipDB == 0 and args.skipAlignment == 0:
 	if verbose>0:
 		sys.stderr.write("done!\n");
 
-if args.skipAlignment == 0:
+if args.skipAlignment == 0: ## if the user decided to skip the alignment 
 	if verbose > 0:
 		sys.stderr.write("Running Auto-alignment...");
 	bowtieCommand = ["bowtie2","-N","1","-L","18","-a","-p",args.threads,"-f", "--no-sq", "--no-head", "--un","%s.unaligned"%args.tempFilePre, "-x", "%s.bowtie2"%args.tempFilePre, "-U", "%s.seqs.fasta"%args.tempFilePre, "-S", "%s.hits.sam"%args.tempFilePre ];

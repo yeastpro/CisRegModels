@@ -1,30 +1,64 @@
+## This script contains; a) a function to load a positional weight matrix input
+## file and convert it to a dictionary. This is then converted into a PWM object
+## as defined by the PWM class. The attributes of the class can be found in the
+## class' docstring.
+## Code annotated by Joe and Guoyao
 import math
 import random
 import copy
+
 BASES = ['A','T','G','C']
 UNIFORM = {'A':0.25,'T':0.25,'G':0.25,'C':0.25};
+
 def loadPWM(fileName):
-	inFile = open(fileName,'r')
-	mat={};
-	myLen=-1;
-	count=0
-	for line in inFile:
-		if line is None or line == "" or line[0]=="#": continue
-		data=line.rstrip().split("\t");
-		curBase=BASES[count];
-		if data[0] in BASES:
-			curBase=data[0];
-			data=data[1:]
-		data=[float(d) for d in data]
-		mat[curBase]=data
-		if myLen!=-1 and myLen !=len(data):
+	"""
+	Loads the positional weight matrix from a given input file, converting it to
+		dictionary of the format: mat =
+			{'A': [0.0, 1.0, 0.0, 0.0],
+ 			 'T': [1.0, 0.0, 0.0, 0.0],
+ 		 	 'G': [0.0, 0.0, 1.0, 0.0],
+ 		 	 'C': [0.0, 0.0, 0.0, 1.0]}
+		This is then conveted returned as a PWM object by calling the class PWM(mat).
+		If the bases aren't specified in the input file (i.e. a file of just numbers)
+		then the order of A, T, G, C is assumed; i.e. the first line is assumed to
+		correspond to A, the 2nd to T etc.
+
+	Args:
+	-----
+		fileName (str) -- the filepath of the input PWM file.
+
+	Returns:
+	--------
+		PWM(mat) (PWM.PWM) -- the PWM object of the input PWM.
+	"""
+	inFile = open(fileName,'r') ## Open the file of name inputted
+	mat = {};
+	myLen = -1;
+	count = 0 ## keeps count of the number of lines iterated over in the loop below.
+
+	for line in inFile: ## Iterate over the lines in the input file.
+		if line is None or line == "" or line[0]=="#": ## If true skip the line
+			continue
+		data = line.rstrip().split("\t"); ## Get rid of whitespace and put tab-separated
+										  ## tokens as separate elements in a list.
+		curBase = BASES[count]; ## The current base at each iteration over the BASES list.
+		if data[0] in BASES: ## i.e. if the base is specified in the input file...
+			curBase=data[0]; ## ... this is defined as the current base...
+			data=data[1:] ## ... and the data are the numbers following the base
+		else: ## if the base isn't specified, it is assumed to be following the order given in BASES
+			pass
+		data = [float(d) for d in data] ## convert the values to floats
+		mat[curBase]=data ## Sets the key as the current base and the list of weights as the value.
+		if myLen != -1 and myLen != len(data): ## Comparing the length of a line to the previous line.
 			raise Exception('PWM does not have the same number of entries per row for %s' % (fileName));
-		myLen=len(data)
-		count+=1;
+		myLen=len(data) ## Used to compare line lengths.
+		count += 1;
 	inFile.close();
-	if count!=4:
+	if count != 4: ## There should only be four lines (for each base) in the input file.
 		raise Exception('PWM has the wrong number of rows for %s; count=%d' % (filename,count))
+
 	return PWM(mat)
+
 class PWM(object):
 	def __init__(self,mat):
 		self.mat=mat
@@ -72,7 +106,7 @@ class PWM(object):
 			if testScore>=thresholdScore:
 				curSeqs = curSeqs + self.getAlternateBSsMeetingThreshold(testScore, curSeq[0:baseI]+b+curSeq[(baseI+1):len(curSeq)], thresholdScore, baseI+1)
 		return curSeqs;
-		
+
 	def getIC(self,prior=UNIFORM,pseudocount=0.001):
 		IC = 0.0;
 		for i in range(0,(self.len())):
