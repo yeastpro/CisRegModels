@@ -1,3 +1,5 @@
+"""The purpose of this file is to parse through sequences and convert them into binary representation."""
+
 #!/usr/bin/env python
 import warnings
 from  CisRegModels import MYUTILS
@@ -56,6 +58,7 @@ else:
 
 ## Initialize sequence values that should be detected
 ## Ignores non-[ATCG] characters
+## Specific order of bases when read
 BASES = ['A','C','G','T'];
 
 
@@ -72,9 +75,10 @@ for line in inFile:
 	curSeqLen = len(curSeq);
     	## How to write string copy with specified characters removed
 	outFile.write(curLabel+"\t");
+	## Loop through all the values in bases for each line
 	for b in BASES:
 		if args.orientBack>0:
-            	#output the front until we run out of chars, then print 0s, or truncate if it's longer than maxSeqLen
+            		#output the front until we run out of chars, then print 0s, or truncate if it's longer than maxSeqLen
 			if curSeqLen > maxSeqLen:
 				curSeq = curSeq[:maxSeqLen];
 			outFile.write("\t".join([ "1" if curSeq[i]==b else "0" for i in range(0,len(curSeq))]));
@@ -87,7 +91,8 @@ for line in inFile:
 			elif curSeqLen > maxSeqLen:
 				curSeq = curSeq[(len(curSeq) - maxSeqLen):];
 			outFile.write("\t".join([ "1" if curSeq[i]==b else "0" for i in range(0,len(curSeq))]));
-        	## if b does not equal character 'T,' print no values (just tab)
+        	## if b does not equal character 'T' (which is the last character in the bases)
+		##  print no values (just tab), ie move to the following line
 		if b!="T":
 			outFile.write("\t");
 	## Print new line
