@@ -50,7 +50,8 @@ else:
 ## Test if line can be read
 ## Adjust counter accordingly
 for line in inFile:
-	if line is None or line == "" or line[0]=="#": continue
+	if line is None or line == "" or line[0]=="#":
+		continue 
 	## Returns a copy of the string with trailing characters removed
     	## Based on argument passed
 	line = line.rstrip();

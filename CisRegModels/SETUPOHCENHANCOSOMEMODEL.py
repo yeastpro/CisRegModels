@@ -15,11 +15,13 @@ class CRM:
 	def __init__(self, args2):
 		self.args=args2;
 
-	def testModel(self):
-		if (self.args.logFP is not None):
+    ## build up the model by using the previous functions
+    def testModel(self):
+		## log file
+        if (self.args.logFP is not None):
 			logFile=MYUTILS.smartGZOpen(self.args.logFP,'w');
 			sys.stderr=logFile;
-
+		## find the location to out put the file
 		if (self.args.outFP is not None):
 			if self.args.verbose>0: sys.stderr.write("Outputting to file "+self.args.outFP+"*\n");
 			outFile=MYUTILS.smartGZOpen(self.args.outFP,'w');
@@ -30,17 +32,18 @@ class CRM:
 		if self.args.loadModel is not None:
 			sys.stderr.write("Loading saved model: %s\n"%(self.args.loadModel));
 			self.sess = tf.Session()
+            ## sess might be a format?
 			tf.saved_model.loader.load(self.sess, ['main'], self.args.loadModel)
 			varNames = [v.name for v in tf.global_variables()];
 			predELY = tf.get_default_graph().get_tensor_by_name("predELY:0")
 			self.ohcX = tf.get_default_graph().get_tensor_by_name("ohcX:0")
-			if self.args.outputBinding > 0:
+			if self.args.outputBinding>0:
 				self.epBoundTensor = tf.get_default_graph().get_tensor_by_name("epBoundTensor:0")
 				if "epBoundTensorRC:0" in varNames:
 					self.args.trainStrandedActivities=1
 					self.epBoundTensorRC = tf.get_default_graph().get_tensor_by_name("epBoundTensorRC:0")
 			if "seqPotentialTensor:0" in varNames:
-				self.args.potentiation = 1
+				self.args.potentiation=1
 				self.seqPotentialTensor = tf.get_default_graph().get_tensor_by_name("seqPotentialTensor:0")
 		else:
 			self.makeGraph();
@@ -115,6 +118,7 @@ class CRM:
 		if (self.args.logFP is not None):
 			logFile.close();
 
+
 	def makeModel(self):
 		if (self.args.logFP is not None):
 			logFile=MYUTILS.smartGZOpen(self.args.logFP,'w');
@@ -139,7 +143,7 @@ class CRM:
 
 		globalStep=0;
 		if self.args.verbose>1: sys.stderr.write("Running through data %i times\n"%self.args.runs)
-
+		## I don't know why here needs the datatime
 		batchGetter = TFHELP.BatchGetterOneHot(self.args.inFP, self.args.batch, self.args.runs, self.args.seqLen)
 		batchX, batchY, runsLeft = batchGetter.getNextBatch();
 		runningMeanMSE = np.zeros(self.args.runningAverageWindow);#init to nans
@@ -293,19 +297,20 @@ class CRM:
 				if line is None or line == "" or line[0] == "#":
 					continue ## Skip to the next line.
 				curPWM = PWM.loadPWM(line.rstrip()); ## Take the PWM path from the input file and convert
-													 ## it into a PWM object. 
+													 ## it into a PWM object.
 				pwmLen = curPWM.len();
 				pwmStart = 0;
-				pwmEnd = pwmLen; # actually end index+1
+				pwmEnd = pwmLen; ## end = lastindex+1
 				if pwmLen > self.args.motifLen: # can't fit the motif;
 					#trim the terminal bases until pwmEnd ==self.args.motifLen; greedy
 					while (pwmEnd - pwmStart) > self.args.motifLen:
 						startInfo = 0.0;
 						endInfo = 0.0;
-						for b in BASES:
+						for b in BASES: ## Iterates over the bases, forming the cumulative
+										## square sum of the start and end weights.
 							startInfo += curPWM.mat[b][pwmStart]**2
 							endInfo += curPWM.mat[b][pwmEnd-1]**2
-						if startInfo > endInfo:
+						if startInfo > endInfo: ## If the sum of all the start weights is larger than for the end weights, go
 							pwmEnd-=1;
 						else:
 							pwmStart+=1;
@@ -685,6 +690,7 @@ class CRM:
 			print([k.name for k in tf.trainable_variables()])
 			raise(Exception("Error: one or more variables with default names: %s"%", ".join([k.name for k in tf.trainable_variables() if re.search("Variable", k.name) is not None])));
 
+    ## the function to output the result to a certain location?
 	def saveParams(self, sess):
 		if self.args.noTrainMotifs==0:
 			if (self.args.outFPre is None):
@@ -707,7 +713,8 @@ class CRM:
 				outFile= sys.stdout;
 			else:
 				outFile = MYUTILS.smartGZOpen(self.args.outFPre+".positional.gz",'w');
-			outFile.write("TF\tposition\tpositionalActivityBias");
+			## I think this is the command to set up the certain location
+            outFile.write("TF\tposition\tpositionalActivityBias");
 			positionalActivityBiasVals = self.positionalActivityBias.eval(session=self.sess).reshape((self.args.seqLen,self.args.numMotifs));
 			if self.args.trainStrandedActivities>0:
 				outFile.write("\tpositionalActivityBiasRC");
@@ -726,6 +733,7 @@ class CRM:
 		else:
 			outFile = MYUTILS.smartGZOpen(self.args.outFPre+".params",'w');
 		#print params
+        ## the reshape part, but I am not sure why we should reshape
 		concs = self.logConcs.eval(session=self.sess).reshape((self.args.numMotifs));
 		activityVals = self.activities.eval(session=self.sess).reshape((self.args.numMotifs));
 		outFile.write("i\tlogConc\tactivity");
@@ -760,3 +768,4 @@ class CRM:
 				outFile.write("\t%g"%(activityDiffVals[i]));
 			outFile.write("\n");
 		outFile.close();
+ 

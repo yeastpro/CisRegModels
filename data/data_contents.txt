@@ -1,0 +1,34 @@
+This file provides a brief description of the data files contained in the 'data/' directory.
+Files are listed in alphabetical order, in the format:
+
+<Filename>
+    -- downloaded from: <place_downloaded_from>
+    -- description: <this is the description>
+
+average_promoter_ELs_per_seq_OLS_Glu_goodCores_ALL_GSE104878_20170811.txt
+    -- downloaded from : https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE104878
+    -- description     :
+
+average_promoter_ELs_per_seq_atLeast100Counts_GSE104878_20160503.txt
+    -- downloaded from : https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE104878
+    -- description     : 
+
+average_promoter_ELs_per_seq_pTpA_ALL_GSE104878_20160609.shuffled.txt
+    -- downloaded from : https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE104878
+    -- description     :
+
+motifs_used.xlsx
+    -- downloaded from : https://www.biorxiv.org/content/10.1101/224907v1.supplementary-material?versioned=true
+    -- description     : Motifs used in this study. Motif IDs are from the YeTFaSCo database. Contains Motif ID and name, as well
+                         as indication for the motifs excluded from the motif frequency analysis.
+
+scaffolds.xlsx
+    -- downloaded from : https://www.biorxiv.org/content/10.1101/224907v1.supplementary-material?versioned=true
+    -- description     :
+
+series_matrix_GSE104878-GPL17143.txt
+    -- downloaded from : ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE104nnn/GSE104878/matrix/
+    -- description     : contains a useful description of how the scaffold is arranged with regard to proximal and distal regions,
+                         and where the 8- bp oligonucleotide is inserted.
+
+ 
