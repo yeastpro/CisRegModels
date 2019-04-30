@@ -1,3 +1,7 @@
+"""The purpose of this file is to parse through files containing promoter sequences and
+gather motifs of sequences (re-occuring sequences), indicating abundance.
+The promoter abundances are subsequently ranked in descending order. """
+
 #!/usr/bin/env python
 import warnings
 from CisRegModels import MYUTILS
@@ -33,6 +37,7 @@ promoterCounts = {};
 ## Creates log file of errors/warnings
 ## logFile = flexible framework to emit log messages
 ## (logging = tracking events when software runs)
+## 'w' indicates file writing
 if (args.logFP is not None):
 	logFile=MYUTILS.smartGZOpen(args.logFP,'w');
 	sys.stderr=logFile;
@@ -51,10 +56,12 @@ else:
 ## Adjust counter accordingly
 for line in inFile:
 	if line is None or line == "" or line[0]=="#":
-		continue 
+		## If the above is valid, skip passed everything and restart the for loop
+		continue
 	## Returns a copy of the string with trailing characters removed
     	## Based on argument passed
 	line = line.rstrip();
+	## Physical counter to add up abundance values as motifs occur per line
 	if line not in promoterCounts:
 		promoterCounts[line]=1;
 	else:
@@ -62,7 +69,7 @@ for line in inFile:
 ## Closes file currently associated with the output
 inFile.close();
 
-## Outputs counters in reversed, sorted order (descending)
+## Outputs counters (of abundances) in reversed, sorted order (descending)
 for i in reversed(sorted(promoterCounts, key=promoterCounts.__getitem__)):
 	outFile.write("%s\t%i\n"%(i, promoterCounts[i]));
 ## Close output
