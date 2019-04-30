@@ -1,5 +1,5 @@
-## The purpose of this function is to store all important and repeatedly used
-## mathematical functions in a single file that can be used by all other files
+"""The purpose of this function is to store all important and repeatedly used
+mathematical functions in a single file that is accessible by all other files."""
 
 import math
 import numpy
@@ -8,7 +8,11 @@ from . import MYUTILS ## Import everything from MYUTILS.py
 ## Function to initialize a matrix from specified file
 ## Returns column names, row names and the matrix itself
 def inputMatrix(inFile, inType = numpy.float, colnames=True, rownames=True):
-    	## Initialize list
+    	"""This function initializes a matrix from specified files
+	and returns the matrix and additional values.
+	Input: File opening function, file type columns and rows
+	Output: Matrix, with columns and rows"""
+	## Initialize list
 	colNames = []
 	## Initialize counters
 	nRows = 0;
@@ -62,6 +66,9 @@ def inputMatrix(inFile, inType = numpy.float, colnames=True, rownames=True):
 
 ## Function to write and save newly formed matrix
 def saveMatrix(outFileName, rowLabs, colLabs, dataMatrix):
+	"""This function writes and saves a matrix.
+	Input: File writing function, generated matrix, row and column values
+	Output: Writes and saves matrix"""
 	outFile = MYUTILS.smartGZOpen(outFileName, "w");
 	outFile.write("\t".join(colLabs)+"\n");
 	for i in range(0,len(rowLabs)):
@@ -73,11 +80,17 @@ def saveMatrix(outFileName, rowLabs, colLabs, dataMatrix):
 
 ## Function to scale the matrix/data to a specified length/size
 def scaleLength(data,desiredLength):
+	"""This function scales a matrix.
+	Input: Matrix and desired length
+	Output: Scaled matrix"""
 	scaleMiddle(data,0,length(data),desiredLength);
 
 ## Function to scale the data to a mean/a desired length
 ## Returns a scaled matrix
 def scaleMiddle(data,fStart,fEnd,desiredLength,func="MEAN"): #from start to end-1
+	"""This function scales a matrix to a mean or desired length.
+	Input: Matrix, desired length and range, calles python's mean function
+	Output: Scaled matrix"""
 	#now scale middle bin accordingly to desiredLength.
 	thisMid = reshapeData(data, fStart, fEnd, desiredLength, func);
 	#print(data[:fStart]);
@@ -87,11 +100,17 @@ def scaleMiddle(data,fStart,fEnd,desiredLength,func="MEAN"): #from start to end-
 
 ## Make sure all components are floats
 def isfloat(x):
+	"""This function converts all components to a float.
+	Input: Data (matrix, list etc.)
+	Output: Data (all components converted to floats)"""
 	return issubclass(type(x), numpy.float) or isinstance(x,float)
 
 ## Reshapes data to make it easier to use
 ## Combines data using average
 def reshapeData(curProfile,fStart,fEnd,desiredLength,func):
+	"""This function reshapes data to make it more usable.
+	Input: Profile to compare to/data to be scaled, desired length and range, matrix function
+	Output: Combines input data using an average, outputs scaled data"""
 	#combines data by average
 	#print(fStart)
 	#print(fEnd)
@@ -163,6 +182,10 @@ def reshapeData(curProfile,fStart,fEnd,desiredLength,func):
 ## Function returns angle (in 2D) between sequences
 ## Returns d{theta}
 def Angle2D(x1, y1, x2, y2):
+    """This function takes the end points on vectors and computes
+    the angle between them.
+    Input: Endpoints of vectors
+    Output: d{theta} angle between the vectors"""
     ## Solve for theta values
     theta1 = np.arctan2(y1,x1);
     theta2 = np.arctan2(y2,x2);
@@ -178,6 +201,10 @@ def Angle2D(x1, y1, x2, y2):
 ## This function determines whether or not the specified point values
 ## are inside the specified polygon
 def isInPolygon(polygonX, polygonY, pointsX, pointsY):
+    """This function determine whether specific points are within
+    a specified (polygonal) area
+    Input: Area boundaries, specified points
+    Output: Confirmation of all the specified points that exist within the boundaries"""
     ## Initialize list
     allInside = [];
     ## Initialize for loop to test pointsX
