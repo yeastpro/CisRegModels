@@ -1,5 +1,7 @@
-## This script contains the CRM ('CisRegModel') class, which contains functions
-## __init__, testModel, makeModel, makeGraph, and saveParams.
+"""
+This script contains the CRM ('CisRegModel') class, which contains functions
+__init__, testModel, makeModel, makeGraph, and saveParams.
+"""
 ## Code annotated by Joe and Guoyao
 from . import MYUTILS;
 from . import PWM;
@@ -19,12 +21,12 @@ class CRM:
 		self.args=args2;
 		return None
 
-    ## build up the model by using the previous functions
-    def testModel(self):
+	## build up the model by using the previous functions
+	def testModel(self):
 		"""
 		This function ...
 		"""
-        if (self.args.logFP is not None): ## log file
+		if (self.args.logFP is not None): ## log file
 			logFile=MYUTILS.smartGZOpen(self.args.logFP,'w');
 			sys.stderr=logFile;
 		## find the location to out put the file
@@ -38,7 +40,7 @@ class CRM:
 		if self.args.loadModel is not None:
 			sys.stderr.write("Loading saved model: %s\n"%(self.args.loadModel));
 			self.sess = tf.Session()
-            ## sess might be a format?
+			## sess might be a format?
 			tf.saved_model.loader.load(self.sess, ['main'], self.args.loadModel)
 			varNames = [v.name for v in tf.global_variables()];
 			predELY = tf.get_default_graph().get_tensor_by_name("predELY:0")
@@ -698,7 +700,7 @@ class CRM:
 			print([k.name for k in tf.trainable_variables()])
 			raise(Exception("Error: one or more variables with default names: %s"%", ".join([k.name for k in tf.trainable_variables() if re.search("Variable", k.name) is not None])));
 
-    ## the function to output the result to a certain location?
+	## the function to output the result to a certain location?
 	def saveParams(self, sess):
 		if self.args.noTrainMotifs==0:
 			if (self.args.outFPre is None):
@@ -722,7 +724,7 @@ class CRM:
 			else:
 				outFile = MYUTILS.smartGZOpen(self.args.outFPre+".positional.gz",'w');
 			## I think this is the command to set up the certain location
-            outFile.write("TF\tposition\tpositionalActivityBias");
+			outFile.write("TF\tposition\tpositionalActivityBias");
 			positionalActivityBiasVals = self.positionalActivityBias.eval(session=self.sess).reshape((self.args.seqLen,self.args.numMotifs));
 			if self.args.trainStrandedActivities>0:
 				outFile.write("\tpositionalActivityBiasRC");
@@ -740,7 +742,7 @@ class CRM:
 		else:
 			outFile = MYUTILS.smartGZOpen(self.args.outFPre+".params",'w');
 		#print params
-        ## the reshape part, but I am not sure why we should reshape
+		## the reshape part, but I am not sure why we should reshape
 		concs = self.logConcs.eval(session=self.sess).reshape((self.args.numMotifs));
 		activityVals = self.activities.eval(session=self.sess).reshape((self.args.numMotifs));
 		outFile.write("i\tlogConc\tactivity");

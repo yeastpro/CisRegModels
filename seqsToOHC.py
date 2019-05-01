@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-"""The purpose of this file is to parse through sequences and convert them into binary representation."""
+"""
+The purpose of this file is to parse through sequences and convert them into
+binary representation.
+"""
+## Code annotated by K
 import warnings
 from  CisRegModels import MYUTILS
 import sys
@@ -40,7 +44,7 @@ if (args.logFP is not None):
 
 ## Creates output directions (inculding warnings)
 if (args.outFP is None):
-        ## system specific function - standard output, if output
+		## system specific function - standard output, if output
 	outFile= sys.stdout;
 else:
 	## Notes on how to exit the program
@@ -59,31 +63,31 @@ BASES = ['A','C','G','T'];
 ## Parse through for specific characters
 for line in inFile:
 	if line is None or line == "" or line[0]=="#": continue
-    	## Returns a copy of the string with trailing characters removed
-    	## Based on argument passed (so strip tabs)
+		## Returns a copy of the string with trailing characters removed
+		## Based on argument passed (so strip tabs)
 	data=line.rstrip().split("\t");
 	curSeq = data[0].upper();
 	curLabel = data[1];
 	curSeqLen = len(curSeq);
-    	## How to write string copy with specified characters removed
+		## How to write string copy with specified characters removed
 	outFile.write(curLabel+"\t");
 	## Loop through all the values in bases for each line
 	for b in BASES:
 		if args.orientBack>0:
-            		#output the front until we run out of chars, then print 0s, or truncate if it's longer than maxSeqLen
+			#output the front until we run out of chars, then print 0s, or truncate if it's longer than maxSeqLen
 			if curSeqLen > maxSeqLen:
 				curSeq = curSeq[:maxSeqLen];
 			outFile.write("\t".join([ "1" if curSeq[i]==b else "0" for i in range(0,len(curSeq))]));
 			if maxSeqLen > curSeqLen: # print 0s
 				outFile.write("\t" + "\t".join(["0"]*(maxSeqLen - curSeqLen)));
-        	#print any 0s at the front and also truncate from the front if too long.
+			#print any 0s at the front and also truncate from the front if too long.
 		else:
 			if maxSeqLen > curSeqLen: # print 0s
 				outFile.write("\t".join(["0"]*(maxSeqLen - curSeqLen)) + "\t");
 			elif curSeqLen > maxSeqLen:
 				curSeq = curSeq[(len(curSeq) - maxSeqLen):];
 			outFile.write("\t".join([ "1" if curSeq[i]==b else "0" for i in range(0,len(curSeq))]));
-        	## if b does not equal character 'T' (which is the last character in the bases)
+			## if b does not equal character 'T' (which is the last character in the bases)
 		##  print no values (just tab), ie move to the following line
 		if b!="T":
 			outFile.write("\t");

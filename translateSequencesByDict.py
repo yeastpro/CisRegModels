@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-## Takes an input file of sequences and translates them in the way defined by an input
-## dictionary of the form 'from\tto'.
-## Example inFPDict file:
-## A	T
-## G 	C
-## ATGC 	TGCA
+"""
+Takes an input file of sequences and translates them in the way defined by an input
+dictionary of the form 'from\tto'.
+Example inFPDict file:
+A	T
+G 	C
+ATGC 	TGCA
+"""
 ## Code annotated by Joe.
 import warnings
 from CisRegModels import MYUTILS
@@ -63,5 +65,5 @@ inFileSeqs.close();
 
 outFile.close();
 
-if (args.logFP is not None): ## If a log file was specified, it needs to be closed. 
+if (args.logFP is not None): ## If a log file was specified, it needs to be closed.
 	logFile.close();

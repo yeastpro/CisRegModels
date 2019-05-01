@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-## The purpose of this script is to ...
+"""
+The purpose of this script is to ...
+"""
 ## Code annotated by Guoyao
 import warnings
 from CisRegModels import MYUTILS
@@ -30,7 +32,7 @@ if (args.logFP is not None):
 
 ## set up the details of the output, including the locations and errors
 if (args.outFP is None):
-    ### I don't know what does this mean, I assume it is when the output location is none, just print the name of the output
+	### I don't know what does this mean, I assume it is when the output location is none, just print the name of the output
 	outFile= sys.stdout;
 else:
 	if args.verbose>0: warnings.warn("Outputting to file "+args.outFP);
@@ -52,7 +54,7 @@ def testAlignment(seq1, seq2, offset):
 			score+=1;
 		#else:
 		#	print("mismatch at %i"%(i));
-	return score/(len(seq1)-offset) 
+	return score/(len(seq1)-offset)
 
 ## the function to return the alignment location of the sequences
 def align(seq1, seq2, offset, overlapRange):
@@ -73,7 +75,7 @@ def getConsensus(read1, read2, offset):
 			consensus.append(read2[1][i-offset]);
 	#print("read 2 from %i"%((len(read1[1])-offset)));
 	return read1[1][0:(offset)] + "".join(consensus) + read2[1][(len(read1[1])-offset):]
-			
+
 args.overlap = int(args.overlap);
 args.overlapRange = int(args.overlapRange);
 
@@ -117,7 +119,7 @@ while notDone:
 		else:
 			raise Exception("One of the files ended prematurely at fastq entry %i (line ~%i)"%(i,i*4));
 	else:
-        ## I dont know what is the revcomp command is, dearch in google is the reverse complement
+		## I dont know what is the revcomp command is, dearch in google is the reverse complement
 		d2 = (d2[0], revcomp(d2[1]), d2[2][::-1]);
 		offset = align(d1[1],d2[1], len(d1[1]) - args.overlap, args.overlapRange);
 		if args.verbose>1:
@@ -125,8 +127,8 @@ while notDone:
 		if offset is not None:
 			consensus = getConsensus(d1, d2, offset);
 			outFile.write("%s\t%s\t%i\n"%(d1[0],consensus,len(d1[1])-offset));
-		else: 
-			sys.stderr.write("Skipping %s/%s because they don't align within given parameters\n"%(d1[0],d2[0])); 
+		else:
+			sys.stderr.write("Skipping %s/%s because they don't align within given parameters\n"%(d1[0],d2[0]));
 
 inFile1.close();
 inFile2.close();

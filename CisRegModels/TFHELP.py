@@ -1,7 +1,9 @@
-"""This file consists of various functions with the goal of reading and
+"""
+This file consists of various functions with the goal of reading and
 writing items as part of a batch.
-Used for converting sequences into binary (OHC) and into vectors for tensorflow"""
-
+Used for converting sequences into binary (OHC) and into vectors for tensorflow
+"""
+## Code annotated by K
 from threading import Thread;
 from . import MYUTILS
 import numpy as np;
@@ -22,7 +24,7 @@ def cycle_learning_rate(learning_rate_low, learning_rate_high, global_step, peri
 	with ops.name_scope(name, "CycleLR",
 											[learning_rate_high, learning_rate_low, global_step,
 											 period]) as name:
-        ## Converting np arrays to tensor
+		## Converting np arrays to tensor
 		learning_rate_high = ops.convert_to_tensor(learning_rate_high, name="learning_rate_high")
 		learning_rate_low = ops.convert_to_tensor(learning_rate_low, name="learning_rate_low")
 		## Initialize (gloabl) variables and types
@@ -37,7 +39,7 @@ def cycle_learning_rate(learning_rate_low, learning_rate_high, global_step, peri
 ## Define class and function for getting specific batches
 class BasicBatchGetter:
 	def getNextBatch(self):
-		"""This function in the class is used to get specific 
+		"""This function in the class is used to get specific
 		batches and define values.
 		Input: Self variable
 		Output: Class values"""
@@ -56,7 +58,7 @@ class BasicBatchGetter:
 ## Class calles basicbatchgetter class (from above)
 class BatchGetterOneHot(BasicBatchGetter):
 	def __init__(self, inFP, batchSize, numRuns, seqLen):
-        	"""This function gets encoded sequences of batches.
+			"""This function gets encoded sequences of batches.
 		Input: Self, batch details, sequence length
 		Output: Initialized self values"""
 		## Define sequence parameters
@@ -75,28 +77,28 @@ class BatchGetterOneHot(BasicBatchGetter):
 		Output: Stores self values and updated variables"""
 		self.nextBatchX = np.zeros((self.batchSize,4,self.seqLen,1))
 		self.nextBatchY = np.zeros((self.batchSize))
-        	## Initialize counter
+			## Initialize counter
 		b=0
 		while b < self.batchSize:
 			line = self.curFH.readline()
 			if line =="":
 				if self.numRuns==1:
-                    			## Update variables
+								## Update variables
 					self.nextBatchX = self.nextBatchX[0:b,:,:,:]
 					self.nextBatchY = self.nextBatchY[0:b]
 					self.numRuns-=1;
 					return;
 				self.curFH.close();
-                		## Read file
+						## Read file
 				self.curFH = MYUTILS.smartGZOpen(self.inFP,'r')
 				self.numRuns-=1;
 				line = self.curFH.readline()
-            		## Open files
+					## Open files
 			if line is None or line[0]=="#": continue
 			curData = np.fromstring(line, dtype=float, sep="\t")
 			self.nextBatchY[b]=curData[0];
 			self.nextBatchX[b,:,:,0] = curData[1:].reshape((4,self.seqLen))
-            		## Update counter
+					## Update counter
 			b+=1
 
 
@@ -105,7 +107,7 @@ class BatchGetterOneHot(BasicBatchGetter):
 ## Same as batchgetteronehot but not encoded
 class BatchGetter(BasicBatchGetter):
 	def __init__(self, inFP, batchSize, numRuns,numTFs, numKds):
-        	"""This function optimizes the original batch getter function.
+			"""This function optimizes the original batch getter function.
 		Same as the previous function but unencoded.
 		Input: Self variable, batch values
 		Output: Stores self values and updated variables"""
@@ -224,4 +226,3 @@ class BatchGetterSeq2Vec(BasicBatchGetter):
 			for si in range(0,self.seqLen-self.wordLen+1):
 				self.nextBatchX[b,si] = self.kmer2index[curSeq[si:(si+self.wordLen)]] #fill X with the indeces of the various k-mers
 			b+=1
-

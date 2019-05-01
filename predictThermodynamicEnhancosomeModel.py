@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-## The purpose of this script is to ..
+"""
+The purpose of this script is to ..
+"""
 ## Code annotated by Guoyao
 import warnings
 import sys
 import argparse
-## set up the parser in python to run the shell command
+## Set up the parser in python to run the shell command
 ## I am not sure why this command name is the same as the alignFastqIntoSeqs.py
 parser = argparse.ArgumentParser(description='Predicts biochemical transcription model on new data using OHC sequence input.')
 parser.add_argument('-i',dest='inFP',	metavar='<inFile>',help='Input file of one-hot-code sequences, preceeded by their expression value, tab delim', required=True);
@@ -53,5 +55,3 @@ args.threads = int(args.threads);
 from CisRegModels.SETUPOHCENHANCOSOMEMODEL import CRM;
 myCRM = CRM(args);
 myCRM.testModel()
-
-

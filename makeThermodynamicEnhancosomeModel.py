@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+"""
+## Code annotated by Joe
 import warnings
 import sys
 import argparse
@@ -54,7 +57,7 @@ parser.add_argument('-v',dest='verbose', action='count',help='Verbose output?', 
 parser.add_argument('-trace',dest='trace', action='count',help='Run an execution trace and save to outFPre.trace.json?', required=False, default=0);
 args = parser.parse_args();
 
-if args.trace >0: 
+if args.trace >0:
 	import os
 	os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/extras/CUPTI/lib64/:"+os.environ['LD_LIBRARY_PATH']
 	sys.stderr.write("LD_LIBRARY_PATH = %s\n" % os.environ['LD_LIBRARY_PATH'])

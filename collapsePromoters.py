@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-
-"""The purpose of this file is to parse through files containing promoter sequences and
+"""
+The purpose of this file is to parse through files containing promoter sequences and
 gather motifs of sequences (re-occuring sequences), indicating abundance.
-The promoter abundances are subsequently ranked in descending order. """
-
+The promoter abundances are subsequently ranked in descending order.
+"""
+## Code annotated by K
 import warnings
 from CisRegModels import MYUTILS
 import sys
@@ -43,11 +44,11 @@ if (args.logFP is not None):
 
 ## Creates output directions (inculding warnings)
 if (args.outFP is None):
-   	## system specific function - standard output
+	## system specific function - standard output
 	outFile= sys.stdout;
 else:
 	if args.verbose>0: warnings.warn("Outputting to file "+args.outFP);
-    	## same as log file for errors/warnings
+		## same as log file for errors/warnings
 	outFile = MYUTILS.smartGZOpen(args.outFP,'w');
 
 #raise Exception("Reached bad state=%d for '%s.%d' '%s' at line '%s'" %(state,mid,ver,tfid,line));
@@ -58,7 +59,7 @@ for line in inFile:
 		## If the above is valid, skip passed everything and restart the for loop
 		continue
 	## Returns a copy of the string with trailing characters removed
-    	## Based on argument passed
+		## Based on argument passed
 	line = line.rstrip();
 	## Physical counter to add up abundance values as motifs occur per line
 	if line not in promoterCounts:

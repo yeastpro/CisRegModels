@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-## This script ...
+"""
+This script ...
+"""
 ## Code annotated by Joe
 import warnings
 from  CisRegModels import MYUTILS

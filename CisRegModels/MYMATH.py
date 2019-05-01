@@ -1,9 +1,11 @@
-"""The purpose of this function is to store all important and repeatedly used
-mathematical functions in a single file that is accessible by all other files."""
-
+"""
+The purpose of this function is to store all important and repeatedly used
+mathematical functions in a single file that is accessible by all other files.
+"""
+## Code annotated by K
 import math
 import numpy
-from . import MYUTILS ## Import everything from MYUTILS.py
+from . import MYUTILS
 
 ## Function to initialize a matrix from specified file
 ## Returns column names, row names and the matrix itself
