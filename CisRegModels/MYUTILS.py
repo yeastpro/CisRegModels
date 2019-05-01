@@ -1,6 +1,7 @@
-"""The purpose of this is to organize all file reading/parsing and writing information.
-This file is imported and called by all other files."""
-
+"""
+The purpose of this is to organize all file reading/parsing and writing information.
+This file is imported and called by all other files.
+"""
 ## So files can be opened/read/saved as .gz files
 import gzip
 
@@ -12,10 +13,10 @@ def smartGZOpen(filename,mode):
 	Output: Returns the file, opened."""
 	## Modify file name to be accessible by gzip
     	## Incase there are too many/it is too long
-	if len(filename)>3 and filename[-3:].lower()=='.gz':
+	if len(filename) > 3 and filename[-3:].lower() == '.gz':
 		return gzip.open(filename,'%st'%(mode));
 	else:
-        	## Open file as it is
+        ## Open file as it is
 		return open(filename,mode);
 
 ## Function to read files

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+## This script ...
+## Code annotated by Joe
 import warnings
 from  CisRegModels import MYUTILS
 from  CisRegModels import MYMATH
@@ -94,7 +96,7 @@ if args.skipDB == 0 and args.skipAlignment == 0:
 	if verbose>0:
 		sys.stderr.write("done!\n");
 
-if args.skipAlignment == 0: ## if the user decided to skip the alignment 
+if args.skipAlignment == 0: ## if the user decided to skip the alignment
 	if verbose > 0:
 		sys.stderr.write("Running Auto-alignment...");
 	bowtieCommand = ["bowtie2","-N","1","-L","18","-a","-p",args.threads,"-f", "--no-sq", "--no-head", "--un","%s.unaligned"%args.tempFilePre, "-x", "%s.bowtie2"%args.tempFilePre, "-U", "%s.seqs.fasta"%args.tempFilePre, "-S", "%s.hits.sam"%args.tempFilePre ];

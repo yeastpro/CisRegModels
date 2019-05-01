@@ -1,3 +1,6 @@
+## This script contains the CRM ('CisRegModel') class, which contains functions
+## __init__, testModel, makeModel, makeGraph, and saveParams.
+## Code annotated by Joe and Guoyao
 from . import MYUTILS;
 from . import PWM;
 from . import TFHELP;
@@ -14,11 +17,14 @@ class CRM:
 
 	def __init__(self, args2):
 		self.args=args2;
+		return None
 
     ## build up the model by using the previous functions
     def testModel(self):
-		## log file
-        if (self.args.logFP is not None):
+		"""
+		This function ...
+		"""
+        if (self.args.logFP is not None): ## log file
 			logFile=MYUTILS.smartGZOpen(self.args.logFP,'w');
 			sys.stderr=logFile;
 		## find the location to out put the file
@@ -118,6 +124,7 @@ class CRM:
 		if (self.args.logFP is not None):
 			logFile.close();
 
+		return None
 
 	def makeModel(self):
 		if (self.args.logFP is not None):
@@ -234,13 +241,14 @@ class CRM:
 
 	def makeGraph(self):
 		"""
+
 		"""
 		sys.stderr.write("Input arguments: " + " ".join(sys.argv)+"\n") ## Prints out the specified arguments.
 
 		if self.args.accIsAct>0 and self.args.potentiation==0:
 			raise Exception("Cannot include accessibility influence on EL without including self.potentiation layer!")
 
-		## Checking to see if self has certain attributes, and if not sets them to be certain values.
+		## Checking to see if self has certain attributes specified, and if not sets them to be certain values.
 		if not hasattr(self.args, 'VARIABLE'):
 			self.args.VARIABLE=None;
 		if not hasattr(self.args, 'tensorboard'):
@@ -727,7 +735,6 @@ class CRM:
 						outFile.write("\t%g"%positionalActivityBiasRCVals[i,j]);
 					outFile.write("\n");
 			outFile.close();
-
 		if (self.args.outFPre is None):
 			outFile= sys.stdout;
 		else:
@@ -765,7 +772,8 @@ class CRM:
 			if self.args.bindingLimits>0:
 				outFile.write("\t%g"%(bindingLimitVals[i]));
 			if self.args.trainStrandedActivities>0:
-				outFile.write("\t%g"%(activityDiffVals[i]));
+				outFile.write("\t%g"%(activityDiffVals[i]))
 			outFile.write("\n");
-		outFile.close();
- 
+		outFile.close()
+
+		return None

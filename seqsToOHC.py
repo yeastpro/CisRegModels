@@ -1,6 +1,5 @@
-"""The purpose of this file is to parse through sequences and convert them into binary representation."""
-
 #!/usr/bin/env python
+"""The purpose of this file is to parse through sequences and convert them into binary representation."""
 import warnings
 from  CisRegModels import MYUTILS
 import sys
@@ -15,19 +14,12 @@ import argparse
 ## (i.e. '-b, -o, -l, -v') are not necessarily required.
 ## Can execute 'python seqToOHC.py --help' from command line to see options.
 ## Supporting information at https://docs.python.org/3/library/argparse.html
-parser = argparse.ArgumentParser(description='Converts a set of sequences into a one-hot-code (binary)
-representation - excludes non [ATGC] chars.  Output in ACGT order, one line per sequence, base then
-position.')
-parser.add_argument('-i',dest='inFP',	metavar='<inFile>',help='Input file of sequences with a value in the
-second column that will preceed the OHC output on each line, separated by a tab', required=True);
-parser.add_argument('-m',dest='maxLen',	metavar='<maxSeqLen>',help='The maximum sequence length to consider
-(truncated after this point)', required=True);
-parser.add_argument('-b',dest='orientBack', action='count',help='Align sequences of different sizes to back
-[default=front]?', required=False, default=0);
-parser.add_argument('-o',dest='outFP', metavar='<outFile>',help='Where to output results [default=stdout]',
-required=False);
-parser.add_argument('-l',dest='logFP', metavar='<logFile>',help='Where to output errors/warnings
-[default=stderr]', required=False);
+parser = argparse.ArgumentParser(description='Converts a set of sequences into a one-hot-code (binary) representation - excludes non [ATGC] chars.  Output in ACGT order, one line per sequence, base then position.');
+parser.add_argument('-i',dest='inFP', metavar='<inFile>', help='Input file of sequences with a value in the second column that will preceed the OHC output on each line, separated by a tab', required=True);
+parser.add_argument('-m',dest='maxLen',	metavar='<maxSeqLen>',help='The maximum sequence length to consider (truncated after this point)', required=True);
+parser.add_argument('-b',dest='orientBack', action='count',help='Align sequences of different sizes to back [default=front]?', required=False, default=0);
+parser.add_argument('-o',dest='outFP', metavar='<outFile>',help='Where to output results [default=stdout]', required=False);
+parser.add_argument('-l',dest='logFP', metavar='<logFile>',help='Where to output errors/warnings [default=stderr]', required=False);
 parser.add_argument('-v',dest='verbose', action='count',help='Verbose output?', required=False, default=0);
 
 ## initialize parser
@@ -105,4 +97,3 @@ outFile.close();
 ## Close log if no output
 if (args.logFP is not None):
 	logFile.close();
-
