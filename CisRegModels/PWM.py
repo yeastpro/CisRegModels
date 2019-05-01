@@ -65,40 +65,25 @@ def loadPWM(fileName):
 ## IMPORTANT:This part is actually the core part of how to calculate the PWM and if we want to improve the explain rate of yeast I think this is the part of code we should edit the most
 ## I haven't document all the function as most of them are connected with each other and it cannot be documented individually
 class PWM(object):
-	## i am not sure what this function is about, I assume this is the function to assay the original file is the set up format, also I dont know what is .isPKdM, i assume it is the function to check the format of the file
-	"""
-	Attributes:
-	-----------
-	"""
+    ## the initial function, to check all the format are correct
 	def __init__(self,mat):
 		self.mat=mat
 		self.isPKdM=False;
 		self.myRC=None;
-
-	## make a deep copy of the self.mat
-	def deepcopy(self):
-		"""
-		<What the func does.>
-
-		Arguments:
-		---------
-		arg1 (type) -- description
-
-		Returns:
-		-------
-		ret1 (type) -- description
-		"""
+	## make a copy of the self.mat, and return to the copy(mat)
+    def deepcopy(self):
 		theCopy = PWM(copy.deepcopy(self.mat))
 		theCopy.isPKdM = self.isPKdM;
 		return theCopy
-	## make a new PWM by using the to_PWM_B function
-	def to_PWM(self,prior=UNIFORM,pseudocount=0.001):
+	## make a new PWM by using the to_PWM_B function, for more please refer to the to_PWM_B function
+    def to_PWM(self,prior=UNIFORM,pseudocount=0.001):
 		newPWM = self.deepcopy();
 		newPWM.to_PWM_B(prior,pseudocount)
 		return newPWM;
-	## a function to calculate the PWM
-	def to_PWM_B(self,prior=UNIFORM,pseudocount=0.001):
-		self.normalize_B()
+	## a function to transfer the PWM, the input is the original self.mat and the output is the normalized PWM
+    ## A pseudocount is an amount added to the number of observed cases in order to change the expected probability in a model of those data, when not known to be zero.
+    def to_PWM_B(self,prior=UNIFORM,pseudocount=0.001):
+		self.normalize_B() ## normalize the original self.mat
 		for b in BASES:
 			for i in range(0,(self.len())):
 				self.mat[b][i] += pseudocount;
@@ -106,9 +91,8 @@ class PWM(object):
 		for b in BASES:
 			for i in range(0,(self.len())):
 				self.mat[b][i] = math.log(self.mat[b][i]/prior[b],2)
-
-	## get a new sequence to calculate PWM
-	def getMin(self):
+	## get the sequence with the minimun position weight and the minimum of total position weight(score) with the original self.mat as input
+    def getMin(self):
 		score = 0.0;
 		seq = ""
 		for i in range(0,(self.len())):
@@ -121,14 +105,17 @@ class PWM(object):
 			seq = seq  +curBase;
 			score = score + curMin;
 		return (score, seq);
-
-	def getHitSeqs(self, thresholdScore):
+    
+	## Transition function, refer to getMax and getAlternateBSsMeetingThreshold
+    def getHitSeqs(self, thresholdScore):
 		(bestScore, bestSeq) = self.getMax();
-
+        
 		return self.getAlternateBSsMeetingThreshold(bestScore, bestSeq, thresholdScore, 0)
-
-	def getAlternateBSsMeetingThreshold(self, curScore, curSeq, thresholdScore, baseI):
-		if baseI>=self.len():
+    
+	## I cannot understand this function
+    def getAlternateBSsMeetingThreshold(self, curScore, curSeq, thresholdScore, baseI):
+        
+		if baseI >= self.len():
 			return [curSeq];
 		curSeqs = [];
 		for b in BASES:
@@ -136,16 +123,14 @@ class PWM(object):
 			if testScore>=thresholdScore:
 				curSeqs = curSeqs + self.getAlternateBSsMeetingThreshold(testScore, curSeq[0:baseI]+b+curSeq[(baseI+1):len(curSeq)], thresholdScore, baseI+1)
 		return curSeqs;
-
-	## how to get the IC
+	## how to get the IC	
 	def getIC(self,prior=UNIFORM,pseudocount=0.001):
 		IC = 0.0;
 		for i in range(0,(self.len())):
 			for b in BASES:
 				IC+= self.mat[b][i] * math.log((self.mat[b][i]+pseudocount)/prior[b], 2)
-
 		return IC
-
+    ## get the sequence with the maximun position weight and the maximum of total position weight(score) with the original self.mat as input
 	def getMax(self):
 		score = 0.0;
 		seq = ""
@@ -158,18 +143,14 @@ class PWM(object):
 					curMax = self.mat[b][i]
 			seq = seq  +curBase;
 			score = score + curMax;
-
 		return (score, seq);
-
+    ## refer to to_PKdM_B
 	def to_PKdM(self,prior=UNIFORM,pseudocount=0.001):
 		newPWM = self.deepcopy();
 		newPWM.to_PKdM_B(prior,pseudocount)
-
 		return newPWM;
-
+    ## the reverse of to_PWM_B, notice that the log part is reverse, others are all the same
 	def to_PKdM_B(self,prior=UNIFORM,pseudocount=0.001):
-		"""
-		"""
 		self.normalize_B()
 		self.isPKdM=True;
 		for b in BASES:
@@ -178,91 +159,89 @@ class PWM(object):
 		self.normalize_B();
 		for b in BASES:
 			for i in range(0,(self.len())):
-				self.mat[b][i] = math.log(prior[b]/self.mat[b][i],2)
-
-	def to_PFM_from_PKDM_B(self,prior=UNIFORM):
+				self.mat[b][i] = math.log(prior[b]/self.mat[b][i],2)## for PWM is mat/prior
+	## the function to transfer pkdm to pfm
+    def to_PFM_from_PKDM_B(self,prior=UNIFORM):
 		for b in BASES:
 			for i in range(0,(self.len())):
 				self.mat[b][i] = prior[b]/(2**self.mat[b][i]) #math.log(prior[b]/self.mat[b][i],2)
 		self.normalize_B();
 		self.isPKdM = False;
-
 	def len(self):
-		"""
-		"""
 		return len(self.mat['A']);
-
-	## set up a normalize function to normalize the PWM
-	def normalize_B(self):
+	## set up a normalization function to normalize the PWM
+    def normalize_B(self):
 		sum = [0.0]*self.len()
 		for b in BASES:
+            ## do the sum of the original base for the normalization in the second loop
 			for i in range(0,(self.len())):
 				sum[i] += self.mat[b][i]
 		for b in BASES:
+            ## use the sum above to normalize the self.mat
 			for i in range(0,(self.len())):
 				self.mat[b][i] = self.mat[b][i]/sum[i]
-	def generateBS(self):
+	## use the self.mat to generate a BS(I assume this is the binding sequence)
+    def generateBS(self):
 		curSeq = "";
 		for i in range(0, self.len()):
-			curRand = random.random();
+			curRand = random.random();## creat a random float
 			for b in BASES:
 				curRand = curRand - self.mat[b][i];
-				if curRand < 0:
+				if curRand < 0:## get the base which's PWM is below 0
 					curSeq=curSeq + b;
 					break;
 		return curSeq;
-	def revcomp(self):
+    ## refer to revcomp_B
+    def revcomp(self):
 		newPWM = self.deepcopy();
 		newPWM.revcomp_B()
 		return newPWM;
+    ## add another line in the matrix named N and which is the maximum PW of the original self.mat
 	def addNToMat_B(self,use=max):
 		self.mat['N']=copy.deepcopy(self.mat['A']);
 		for i in range(0, self.len()):
 			for b in BASES:
 				self.mat['N'][i]=use(self.mat[b][i],self.mat['N'][i])
-
-	def negate_B(self):
+	## to make the PW positive to negative and negative to positive
+    def negate_B(self):
 		self.mat['G']=[-x for x in self.mat['G']];
 		self.mat['C']=[-x for x in self.mat['C']];
 		self.mat['A']=[-x for x in self.mat['A']];
 		self.mat['T']=[-x for x in self.mat['T']];
-
-	## the reverse function
-	def revcomp_B(self):
+	## the reverse function, make the PW of C to G, G to C, A to T and T to A
+    def revcomp_B(self):
 		temp = list(reversed(self.mat['G']));
 		self.mat['G']=list(reversed(self.mat['C']));
 		self.mat['C']=temp
 		temp = list(reversed(self.mat['A']));
 		self.mat['A']=list(reversed(self.mat['T']));
 		self.mat['T']=temp
-
-	def dsScan(self,seq):
+	## the gomer is a method to calculate and some of the codes below are the method logic 
+    ## the assay function anf refer to scan
+    def dsScan(self,seq):
 		if self.myRC is None:
 			self.myRC = self.revcomp();
-
 		return self.scan(seq), self.myRC.scan(seq);
-
-	def dsGomerPBounds(self, seq, conc, kdScale=0):
-		if not self.isPKdM:
+	## 
+    def dsGomerPBounds(self, seq, conc, kdScale=0):
+		if not self.isPKdM:## check if this is pkdm
 			raise Exception("Trying to run gomerScore on a non-PKdM");
 		top, bottom = self.dsScan(seq); #returns log kds
 		top = [1.0 - (1.0/(1.0 + (math.exp((conc-kd)*math.exp(kdScale))))) for kd in top]
 		bottom = [1.0 - (1.0/(1.0 + (math.exp((conc-kd)*math.exp(kdScale))))) for kd in bottom]
 		#top = [1.0 - (1.0/(1.0 + (math.exp(conc-kd))**math.exp(kdScale))) for kd in top]
 		#bottom = [1.0 - (1.0/(1.0 + (math.exp(conc-kd))**math.exp(kdScale))) for kd in bottom]
-
 		return [top, bottom]
-
-	def gomerScore(self,seq, conc):
+	## get the gomer score base on the gomerScore_SS, refer to gomerScore_SS
+    def gomerScore(self,seq, conc):
 		if self.myRC is None:
-			self.myRC = self.revcomp();
+			self.myRC = self.revcomp(); ## same as dsScan
 		top = self.gomerScore_SS(seq, conc);
 		bottom = self.myRC.gomerScore_SS(seq, conc);
 		#print("scanning %s; top = %g; bottom = %g; combined = %g"%(seq,top,bottom, 1.0 - (1.0 - top)*(1.0-bottom)));
-
 		return 1.0 - (1.0 - top)*(1.0-bottom);
-
-	def gomerScore_SS(self,seq, conc):
+	## 
+    def gomerScore_SS(self,seq, conc):
 		if not self.isPKdM:
 			raise Exception("Trying to run gomerScore on a non-PKdM");
 		logPNotBound = 0.0;
@@ -272,29 +251,25 @@ class PWM(object):
 				if seq[i+j] in self.mat:
 					kdi+=self.mat[seq[i+j]][j]
 			logPNotBound-= math.log(1 + math.exp(conc-kdi),2)
-
 		return 1.0 - 2.0**logPNotBound;
-
-	def scan(self,seq):
+	## get the score of the whole self.mat except the sequence
+    def scan(self,seq):
 		allScores = [0.0] * (len(seq)-self.len()+1);
 		for i in range(0,(len(seq)-self.len()+1)):
 			for j in range(0,(self.len())):
 				allScores[i]+=self.mat[seq[i+j]][j]
-
 		return allScores
-
-	def output(self,outStream):
+	## refer to to_s
+    def output(self,outStream):
 		outStream.write(self.to_s())
-
-	def to_s(self):
+	## combine the sequence and the PW
+    def to_s(self):
 		pwmStr="";
 		for b in self.mat:
 			pwmStr +=b+"\t"+"\t".join([str(e) for e in self.mat[b]])+"\n"
-
 		return pwmStr
-
-	## I am not sure what is this
-	def to_REDUCE(self):
+	## return to a str with matirx information?
+    def to_REDUCE(self):
 		pwmStr = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<matrix_reduce>\n<psam_length>%i</psam_length>\n<psam>\n"%(self.len());
 		baseOrder = ["A","C","G","T"];
 		pwmStr = pwmStr +"#"+ "\t".join(baseOrder)+"\n"
@@ -303,3 +278,4 @@ class PWM(object):
 				pwmStr = pwmStr + str(self.mat[b][i])+"\t"
 			pwmStr=pwmStr + "\n"
 		return pwmStr + "</psam>\n</matrix_reduce>\n";
+
