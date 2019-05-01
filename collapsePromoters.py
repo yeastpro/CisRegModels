@@ -1,8 +1,9 @@
+#!/usr/bin/env python
+
 """The purpose of this file is to parse through files containing promoter sequences and
 gather motifs of sequences (re-occuring sequences), indicating abundance.
 The promoter abundances are subsequently ranked in descending order. """
 
-#!/usr/bin/env python
 import warnings
 from CisRegModels import MYUTILS
 import sys
@@ -16,12 +17,10 @@ import argparse
 ## (i.e. '-o, -l, -v') are not necessarily required.
 ## Can execute 'python collapsePromoters.py --help' from command line to see options.
 ## Supporting information at https://docs.python.org/3/library/argparse.html
-parser = argparse.ArgumentParser(description='Takes a file containing many promoter sequences and counts them, outputting them
-in decreasing order of abundance.')
+parser = argparse.ArgumentParser(description='Takes a file containing many promoter sequences and counts them, outputting them in decreasing order of abundance.')
 parser.add_argument('-i',dest='inFP',	metavar='<inFile>',help='Input file of promoter sequences', required=True);
 parser.add_argument('-o',dest='outFP', metavar='<outFile>',help='Where to output results [default=stdout]', required=False);
-parser.add_argument('-l',dest='logFP', metavar='<logFile>',help='Where to output errors/warnings [default=stderr]',
-required=False);
+parser.add_argument('-l',dest='logFP', metavar='<logFile>',help='Where to output errors/warnings [default=stderr]', required=False);
 parser.add_argument('-v',dest='verbose', action='count',help='Verbose output?', required=False, default=0);
 
 ## initialize parser
