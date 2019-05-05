@@ -58,7 +58,7 @@ class BasicBatchGetter:
 ## Class calles basicbatchgetter class (from above)
 class BatchGetterOneHot(BasicBatchGetter):
 	def __init__(self, inFP, batchSize, numRuns, seqLen):
-			"""This function gets encoded sequences of batches.
+		"""This function gets encoded sequences of batches.
 		Input: Self, batch details, sequence length
 		Output: Initialized self values"""
 		## Define sequence parameters
@@ -107,7 +107,7 @@ class BatchGetterOneHot(BasicBatchGetter):
 ## Same as batchgetteronehot but not encoded
 class BatchGetter(BasicBatchGetter):
 	def __init__(self, inFP, batchSize, numRuns,numTFs, numKds):
-			"""This function optimizes the original batch getter function.
+		"""This function optimizes the original batch getter function.
 		Same as the previous function but unencoded.
 		Input: Self variable, batch values
 		Output: Stores self values and updated variables"""
